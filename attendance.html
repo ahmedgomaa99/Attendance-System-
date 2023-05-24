@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <style>
+    body{
+                background-color: aliceblue;
+            }
+  </style>
+  <script>
+
+    window.addEventListener('load', function () {
+
+      function setTime() {
+        const d = new Date();
+        const time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+        return time;
+      }
+      function setDate() {
+        const d = new Date();
+        const date = d.getFullYear() + ":" + d.getMonth() + ":" + d.getDate();
+        return date;
+      }
+
+
+      function attendFun(userName, dailyATtendData) {
+        if (dailyATtendData.length !== 0) {
+
+          let add = false;
+          let daydataarr = dailyATtendData[0].dayattendenceData;
+          for (let index = 0; index < daydataarr.length; index++) {
+            if (userName.value == daydataarr[index].username) {
+              add = true;
+              if (daydataarr[index].Depaturetime == "") {
+                daydataarr[index].Depaturetime = setTime();
+              } else
+               { alert("This empolyee already left"); }
+
+            }
+          }
+          if (!add) {
+            const enterenceTime = setTime();
+            let attendenceData2 = { username: userName.value, EnterenceTime: enterenceTime, Depaturetime: "" }
+            daydataarr.push(attendenceData2);
+
+          }
+          return dailyATtendData;
+        } else {
+          const d2 = new Date();
+          const enterenceTime = setTime();
+          let attendenceData2 = { username: userName.value, EnterenceTime: enterenceTime, Depaturetime: "" }
+          dailyATtendData = [{ day: "", dayattendenceData: [] }];
+          dailyATtendData[0].dayattendenceData.push(attendenceData2);
+          dailyATtendData[0].day = setDate();
+          return dailyATtendData;
+        }
+      }
+
+
+      function depatureFun(dayNow, dailyAttendData, monthlyATtendenceData) {
+
+        dailyAttendData[0].dayattendenceData.forEach(element => {
+          if (element.Depaturetime === "")
+          {
+
+            element.Depaturetime = "23:30:00";
+
+          }
+
+        });
+        localStorage.setItem("dailyAttendenceData", JSON.stringify(dailyAttendData));
+        if (dayNow !== dailyAttendData[0].day) {
+
+
+          if (monthlyATtendenceData.length !== 0) {
+            if (monthlyATtendenceData[monthlyATtendenceData.length - 1].day !== dailyAttendData[0].day) {
+              monthlyATtendenceData.push(dailyAttendData[0]);
+            }
+          } else {
+            monthlyATtendenceData.push(dailyAttendData[0]);
+
+          }
+          localStorage.setItem("monthlyAttendenceData", JSON.stringify(monthlyAttendenceData));
+
+          localStorage.removeItem("dailyAttendenceData");
+        }
+
+        updatetable(dailyAttendData);
+
+
+      }
+
+
+      function updatetable(dailyATtendData) {
+        let daatatable = document.getElementsByTagName('table')[0];
+        let tabletrs = document.getElementsByTagName('tbody')[0];
+        tabletrs.innerHTML = "";
+
+        if (dailyATtendData.length !== 0) {
+          let daydataarr = dailyATtendData[0].dayattendenceData;
+          for (let index = 0; index < daydataarr.length; index++) {
+            let createdtr = document.createElement('tr');
+            let enteranceDate = document.createElement('td');
+            enteranceDate.innerText = dailyATtendData[0].day;
+            let employeeName = document.createElement('td');
+            employeeName.innerText = daydataarr[index].username;
+            let enterenceTime = document.createElement('td');
+            enterenceTime.innerText = daydataarr[index].EnterenceTime;
+            let depatureTime = document.createElement('td');
+            depatureTime.innerText = daydataarr[index].Depaturetime;
+            createdtr.appendChild(employeeName);
+            createdtr.appendChild(enteranceDate);
+            createdtr.appendChild(enterenceTime);
+            createdtr.appendChild(depatureTime);
+            tabletrs.appendChild(createdtr);
+            daatatable.appendChild(tabletrs);
+          }
+
+        }
+
+      }
+
+     
+      let userMonthlyData = [];
+      if (localStorage.getItem("userMonthlyData")) {
+        userMonthlyData = JSON.parse(localStorage.getItem("userMonthlyData"));
+      }
+
+      let monthlyAttendenceData = [];
+      if (localStorage.getItem("monthlyAttendenceData")) {
+        monthlyAttendenceData = JSON.parse(localStorage.getItem("monthlyAttendenceData"));
+      }
+      let dailyAttendenceData = [];
+      if (localStorage.getItem("dailyAttendenceData")) {
+        dailyAttendenceData = JSON.parse(localStorage.getItem("dailyAttendenceData"));
+      }
+      let userArr = [];
+      if (localStorage.getItem("usersData")) {
+        userArr = JSON.parse(localStorage.getItem("usersData"));
+      }
+
+
+      if (dailyAttendenceData.length !== 0) {
+
+        const d = new Date();
+        const timeH = d.getHours();
+        const timeM = d.getMinutes();
+
+        const dayNow = setDate();
+        let add = false;
+
+        if (((timeH < 00 || (timeH == 00 && timeM < 30)) || (timeH > 15) || (timeH == 23 && timeM > 30))) {
+          add = true;
+        }
+
+        if (add || (dayNow !== dailyAttendenceData[0].day)) {
+          depatureFun(dayNow, dailyAttendenceData, monthlyAttendenceData);
+
+        }
+      }
+
+      updatetable(dailyAttendenceData);
+
+
+      let attendBtn = document.getElementById('attendBtn');
+      attendBtn.addEventListener('click', function () {
+
+
+        const d = new Date();
+        const timeH = d.getHours();
+        const timeM = d.getMinutes();
+
+        if (((timeH > 00 || (timeH == 00 && timeM > 30)) && (timeH < 23) || (timeH == 23 && timeM < 30))) {
+
+
+          if (userArr.length !== 0) {
+            
+            let userName = document.getElementById('username');
+            let add=false;
+            for (let index = 0; index < userArr.length; index++) {
+              if (userArr[index].username == userName.value) {
+                add=true;
+                dailyAttendenceData = attendFun(userName, dailyAttendenceData);
+                localStorage.setItem("dailyAttendenceData", JSON.stringify(dailyAttendenceData));
+
+                updatetable(dailyAttendenceData);
+
+              }
+
+            }
+            if (!add) {
+              alert("This user is not in the system");
+            }
+          }
+
+
+        } else { alert("time out !!!!!"); }
+
+      });
+
+    });
+
+  </script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-gradient">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <div class="dropdown">
+            <button class="btn " type="button" id="dropdownMenuButton"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+              Home
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="Monthlyhome.html">Monthly Report</a>
+              <a class="dropdown-item" href="Dailyhome.html">Daily Report</a>
+              <a class="dropdown-item" href="waitingEmp.html" id="waiting-link">waiting Report</a>
+            </div>
+          </div>           <a class="nav-link active" aria-current="page" href="attendance.html" id="attendance-link">Attendance</a>
+          <a class="nav-link" href="profile.html">Profile</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<div class="container w-50">
+  <div class="text-center" >
+
+    <h1><span  style="color:black ;text-decoration: underline;font-style: italic;">Register your attendance !!</span></h6>
+
+    </div>
+         <form >
+        <div class="form-outline form-white mb-4">
+            <input type="text" name="userName" class="form-control form-control-lg" placeholder="Enter Username" id="username">
+        </div>
+        <div class="text-center">
+            <input type="button" name="confirmattendance" value="ConfirmAttendance" class="btn btn-danger   mb-3 " id="attendBtn">
+        </div>
+    </form>
+       
+</div>
+<div class="container w-75">
+<table class="table m-2" id="navbarNavAltMarkup">
+    <thead class="bg-black text-white text-center">
+      <tr>
+        <th scope="col">Employee Name</th>
+          <th scope="col">Attendance date</th>
+          <th scope="col">Attendance Time</th>
+          <th scope="col">Depature Time</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      
+    </tbody>
+ </table>
+</div>
+
+  <script src="js/popper.min.js"></script>
+  <script src="js/jquery-3.6.4.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+
+
+    <style>
+       body {
+background: #6a11cb;
+
+background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+}
+    </style>
+
+        <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+        </script>
+        <script type="text/javascript">
+        (function(){
+        emailjs.init("zsQDQycT07-q7y15p");
+        })();
+</script>
+    <script>
+        window.addEventListener('load', function () {
+
+          
+            let userArr = [];
+            if (localStorage.getItem("usersData")) {
+                userArr = JSON.parse(localStorage.getItem("usersData"));
+            }
+
+            let fname = document.getElementById('fname');
+            let lname = document.getElementById("lname");
+            let adress = document.getElementById("adress");
+            let email = document.getElementById("email");
+            let age = document.getElementById("age");
+            let regBtn = document.getElementById("regBtn");
+
+
+            function validName(name) {
+                let nameregex = /^[a-zA-Z]{2,10}$/;;
+                let test = nameregex.test(name);
+
+                return test;
+
+            }
+            function validAdress(adress) {
+                let adressregex = /^[a-zA-Z0-9\s,]+$/;;;
+                let test = adressregex.test(adress);
+                return test;
+
+            }
+            function validEmail(email) {
+                let emailregex = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
+                let test = emailregex.test(email);
+                return test;
+
+            }
+            function validAge(age) {
+                let test = false;
+                if (!isNaN(age)) {
+                    test = true;
+                }
+                return test;
+            }
+
+            function sendMail() {
+                var params = {
+                    email: email.value,
+                    name: "Attendance",
+                    username: fname.value + age.value + lname.value,
+                    password: fname.value + age.value + Math.floor(Math.random() * 100),
+                };
+
+                const serviceID = "service_8beit7b";
+                const templateID = "template_5mvrgqe";
+
+                emailjs.send(serviceID, templateID, params)
+                    .then(res => {
+
+                        userArr.push({
+                            Firstname: fname.value, Lastname: lname.value,
+                            Email: email.value, Adress: adress.value, Age: age.value,
+                            username: params.username, password: params.password, Usertype: "empolyee", Status: "waiting"
+                        });
+
+                        localStorage.setItem("usersData", JSON.stringify(userArr));
+
+
+                        console.log(res);
+                        alert(" Your Login data sent successfully check your Email!! ")
+
+                    })
+                    .catch(err => console.log(err));
+
+            }
+
+            let regesterBtn = document.getElementById('regBtn');
+            regesterBtn.addEventListener('click', function () {
+
+                if (validName(fname.value) && validName(lname.value) &&
+                    validEmail(email.value) && validAge(age.value) && validAdress(adress.value)) {
+
+
+                    if (userArr.length == 0) {
+                        userArr.push({
+                            Firstname: fname.value, Lastname: lname.value,
+                            Email: email.value, Adress: adress.value, Age: age.value, Usertype: "empolyee", Status: "waiting"
+                        });
+
+                      
+
+                    } else {
+
+                        let flag = false;
+                        userArr.forEach(element => {
+                            if (element.Email == email.value) {
+                                alert("This email already exists");
+                                flag = true;
+                            }
+                        });
+                        if (!flag) {
+
+                            sendMail();
+
+
+                        }
+
+                    }
+
+
+
+
+                } else { console.log("Your data not valid"); }
+
+               
+            });
+
+        });
+
+    </script>
+
+
+</head>
+
+<body>
+    <form class="vh-80 gradient-custom">
+        <div class="container py-5 h-80">
+          <div class="row d-flex justify-content-center align-items-center h-80">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
+      
+                  <div class="mb-md-5 mt-md-4 pb-5">
+      
+                    <h2 class="fw-bold mb-2 text-capitalize" style="font-style: italic;">Sign UP<br/> To Attenace System</h2>
+                    <p class="text-white-50 mb-5">Please fill the input !!</p>
+            
+                    <div class="row">
+
+                    <div class="form-outline form-white mb-4 col-6">
+                        <input type="text"  placeholder="Firstname" name="firstname" class="form-control form-control-lg" id="fname" />
+
+                    </div>
+                     <div class="form-outline form-white mb-4 col-6">
+                        <input type="text"  placeholder="Lastname" name="lastname" class="form-control form-control-lg" id="lname" />
+
+                    </div>
+      
+                    </div>
+
+
+                    
+
+                    <div class="form-outline form-white mb-4 ">
+                      <input type="text" placeholder="Address" name="address" class="form-control form-control-lg"id="adress" />
+                    </div>
+                    <div class="form-outline form-white mb-4 ">
+                        <input type="number"  placeholder="Age" name="age" class="form-control form-control-lg" id="age" />
+                      </div>
+
+                   
+      
+                      <div class="form-outline form-white mb-4 ">
+                        <input type="email" placeholder="E-Mail" name="email" class="form-control form-control-lg"id="email" />
+                      </div> 
+
+
+
+
+                  
+                    <button class="btn btn-outline-light btn-lg px-5  btn-primary"name="login" value="Login" type="button" id="regBtn">Register</button>
+            
+
+                  </div>
+      
+                  <div>
+                    <p class="mb-0">You have an account ? <a href="login.html" class="text-white-50 fw-bold">Sign in</a>
+                    </p>
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+
+
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.6.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+
+</html>

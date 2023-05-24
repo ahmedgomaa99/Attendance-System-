@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <style>
+    body {
+                  background-color: aliceblue;
+                }
+  </style>
+  <script>
+
+    window.addEventListener('load', function () {
+
+
+      function updatetable(waitingArr) {
+        let daatatable = document.getElementsByTagName('table')[0];
+        let tabletrs = document.getElementsByTagName('tbody')[0];
+        tabletrs.innerHTML = "";
+
+
+        for (let i = 0; i < waitingArr.length; i++) {
+
+
+
+          let createdtr = document.createElement('tr');
+          let emp_fName = document.createElement('td');
+          emp_fName.innerText = waitingArr[i].empfName;
+          let emp_lName = document.createElement('td');
+          emp_lName.innerText = waitingArr[i].emplName;
+          let emp_userName = document.createElement('td');
+          emp_userName.innerText = waitingArr[i].empuserName;
+          let emp_Email = document.createElement('td');
+          emp_Email.innerText = waitingArr[i].empEmail;
+          let emp_Status = document.createElement('td');
+          emp_Status.innerText = waitingArr[i].empStatus;
+          createdtr.appendChild(emp_fName);
+          createdtr.appendChild(emp_lName);
+          createdtr.appendChild(emp_userName);
+          createdtr.appendChild(emp_Email);
+          createdtr.appendChild(emp_Status);
+          tabletrs.appendChild(createdtr);
+          daatatable.appendChild(tabletrs);
+        }
+      }
+
+
+
+
+      let uarr = [];
+      if (localStorage.getItem("usersData")) {
+        uarr = JSON.parse(localStorage.getItem("usersData"));
+      }
+
+
+      function updateArr(uarr) {
+
+        if (uarr.length !== 0) {
+          let waitingArr = [];
+          let object1 = {};
+          for (let i = 0; i < uarr.length; i++) {
+
+            if (uarr[i].Status == "waiting") {
+              object1 = {
+                empfName: uarr[i].Firstname,
+                emplName: uarr[i].Lastname,
+                empuserName: uarr[i].username,
+                empEmail: uarr[i].Email,
+                empStatus: uarr[i].Status
+              };
+
+              waitingArr.push(object1);
+
+            }
+
+
+          }
+          updatetable(waitingArr);
+        }
+
+      }
+      updateArr(uarr);
+
+      let userName = document.getElementById('userName');
+      let StatusSelect = document.getElementById("StatusSelect");
+
+      let Statusbtn = document.getElementById('Statusbtn');
+      Statusbtn.addEventListener('click', function () {
+
+
+        if (uarr.length !== 0) {
+
+          uarr.forEach(element => {
+            if (element.username == userName.value) {
+              element.Status = StatusSelect.value;
+              localStorage.setItem("usersData", JSON.stringify(uarr));
+            }
+          });
+
+
+          updateArr(userArr);
+        }
+
+
+      });
+      
+    });
+
+
+  </script>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-gradient">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <div class="dropdown">
+            <button class="btn " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              Home
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="Monthlyhome.html">Monthly Report</a>
+              <a class="dropdown-item" href="Dailyhome.html">Daily Report</a>
+              <a class="dropdown-item" href="waitingEmp.html" id="waiting-link">waiting Report</a>
+            </div>
+          </div>
+          <a class="nav-link" href="attendance.html" id="attendance-link">Attendance</a>
+          <a class="nav-link" href="profile.html">Profile</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="text-center" >
+
+    <h1><span  style="color:black ;text-decoration: underline;font-style: italic;"> Waiting Employee Report</span></h6>
+
+    </div>
+
+
+    <table class="table m-2" id="navbarNavAltMarkup">
+      <thead class="bg-dark text-light">
+        <tr>
+          <th scope="col">Employee Frist Name</th>
+          <th scope="col">Employee Last Name</th>
+          <th scope="col">Employee User Name</th>
+          <th scope="col">Employee Email</th>
+          <th scope="col">Employee Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+    <div class=" container w-50 mt-4">
+      <form>
+        <div class="row">
+          <div class="input-group ">
+
+
+            <input type="text" class="form-control" placeholder="User Name" id="userName">
+         
+            <select class="btn  btn-outline-secondary dropdown-toggle " aria-label="Default select example" id="StatusSelect">
+              <option selected>waiting</option>
+
+              <option>yes</option>
+
+              <option>blocked</option>
+
+            </select>
+          </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="text-center">
+      <input type="button" name="updateStatus" value="Update" class="btn btn-danger mt-2" id="Statusbtn">
+    </div>
+
+
+    </form>
+    </div>
+
+
+
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.6.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+
+</html>

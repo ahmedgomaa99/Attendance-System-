@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+
+    <style>
+         body {
+background: #6a11cb;
+
+background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+}
+    </style>
+    <script>
+        window.addEventListener('load', function () {
+
+              // let usersData=[{Firstname: "1" ,Lastname:"1",
+              //  Email:"1",Adress:"1", Age:"1" ,Usertype:"admin", Status:"yes",username:"11",password:"p11"  },
+              // {Firstname: "2" ,Lastname:"2",
+              //  Email:"2",Adress:"2", Age:"2" ,Usertype:"securityman", Status:"yes",username:"22" ,password:"p22" },
+              // {Firstname: "3" ,Lastname:"3",
+              //  Email:"3",Adress:"3", Age:"3" ,Usertype:"Empolyee", Status:"yes",username:"33",password:"p33"  }];
+
+
+              //  localStorage.setItem("usersData",JSON.stringify(usersData));
+
+
+
+
+
+            let arr1 = [];
+            if (localStorage.getItem("usersData")) {
+                arr1 = JSON.parse(localStorage.getItem("usersData"));
+            }
+
+            let userName = document.getElementById('username');
+            let passWord = document.getElementById("password");
+
+
+            let loginBtn = document.getElementById('logBtn');
+            loginBtn.addEventListener('click', function () {
+
+                if (arr1.length !== 0) {
+
+                    let isexist = false;
+                    let userType = "";
+                    arr1.forEach(element => {
+                        if (element.username == userName.value && element.password == passWord.value) {
+                          isexist = true;
+                            if (element.Status == "yes") {
+                               
+                                let userinfo = {
+                                    username: userName.value,
+                                    password: passWord.value,
+                                };
+                                sessionStorage.setItem("userLogindata", JSON.stringify(userinfo));
+                                window.open("profile.html", "_self");
+
+                            } else { alert(`Your login status to the system is ${element.Status}`); }
+
+                        }
+                    });
+                    if (!isexist) {
+
+                        alert("please ckeck your data again");
+                    }
+                }
+
+            });
+
+
+        });
+
+
+    </script>
+
+</head>
+
+<body>
+    
+
+    <form class="vh-80 gradient-custom">
+        <div class="container py-5 h-80">
+          <div class="row d-flex justify-content-center align-items-center h-80">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
+      
+                  <div class="mb-md-5 mt-md-4 pb-5">
+      
+                    <h2 class="fw-bold mb-2 text-capitalize" style="font-style: italic;">Login<br/> To Attenace System</h2>
+                    <p class="text-white-50 mb-5">Please enter your login and password!</p>
+      
+                    <div class="form-outline form-white mb-4">
+                      <input type="text"  placeholder="Username" name="user" class="form-control form-control-lg" id="username" />
+                    </div>
+      
+                    <div class="form-outline form-white mb-4">
+                      <input type="password" placeholder="Password" name="password" class="form-control form-control-lg"id="password" />
+                    </div>
+      
+      
+                    <button class="btn btn-outline-light btn-lg px-5 btn-primary"name="login" value="Login" type="button" id="logBtn">Login</button>
+      
+
+                  </div>
+      
+                  <div>
+                    <p class="mb-0">Don't have an account? <a href="registrion .html" class="text-white-50 fw-bold">Sign Up</a>
+                    </p>
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+
+
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.6.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+
+</html>

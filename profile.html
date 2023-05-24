@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+
+    <style>
+        body
+        {
+            background-color:aliceblue;
+        }
+    </style>
+    <script>
+
+
+
+
+        window.addEventListener('load', function () {
+
+
+            let currentUserData = "";
+
+            if (sessionStorage.getItem("userLogindata") && localStorage.getItem("usersData")) {
+                let getalluser = JSON.parse(sessionStorage.getItem("userLogindata"));
+                let everyuser = JSON.parse(localStorage.getItem("usersData"));
+
+
+                for (let i = 0; i < everyuser.length; i++) {
+                    if (everyuser[i].password === getalluser.password && everyuser[i].username === getalluser.username) {
+                        currentUserData = {
+                            firstname: everyuser[i].Firstname,
+                            lastname: everyuser[i].Lastname,
+                            address: everyuser[i].Adress,
+                            age: everyuser[i].Age,
+                            email: everyuser[i].Email,
+                            userType: everyuser[i].Usertype,
+                            username: everyuser[i].username,
+                            password: everyuser[i].password,
+                        };
+
+                        console.log(`currentUserData ${currentUserData}`);
+                        sessionStorage.setItem("currentUserData", JSON.stringify(currentUserData));
+
+                    }
+                }
+            }
+
+            const attendanceLink = document.getElementById('attendance-link');
+            if (currentUserData !== "") {
+                if (currentUserData.userType === "Empolyee" || currentUserData.userType === "admin") {
+                    attendanceLink.parentNode.removeChild(attendanceLink);
+
+                }
+            }
+
+
+
+
+            if (sessionStorage.getItem("userLogindata") && localStorage.getItem("usersData")) {
+                let getalluser = JSON.parse(sessionStorage.getItem("userLogindata"));
+                let everyuser = JSON.parse(localStorage.getItem("usersData"));
+
+
+
+                if (currentUserData !== "") {
+                    let Empfname = document.getElementById('fname');
+                    let Emplname = document.getElementById("lname");
+                    let Empadress = document.getElementById('adress');
+                    let Empage = document.getElementById("age");
+                    let Empemail = document.getElementById('email');
+                    let EmpuserName = document.getElementById("userName");
+                    let Emppassword = document.getElementById('password');
+                    let EmpuserType = document.getElementById("userType");
+
+                    Empfname.innerText = currentUserData.firstname;
+
+                    Emplname.innerText = currentUserData.lastname;
+
+                    Empadress.innerText = currentUserData.address;
+
+                    Empage.innerText = currentUserData.age;
+
+                    Empemail.innerText = currentUserData.email;
+
+                    EmpuserName.innerText = currentUserData.username;
+
+                    Emppassword.innerText = currentUserData.password;
+
+                    EmpuserType.innerText = currentUserData.userType;
+
+                }
+
+            } else {
+                console.log("error not found");
+            }
+            function checkUserDataFound() {
+                if (currentUserData === "") return false;
+                else return true;
+            }
+
+
+
+        });
+
+
+
+
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-gradient">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link " href="Monthlyhome.html">Home</a>
+                    <a class="nav-link" href="attendance.html" id="attendance-link">Attendance</a>
+                    <a class="nav-link active" aria-current="page" href="profile.html">Profile</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="text-center" >
+
+        <h1><span  style="color:black ;text-decoration: underline;font-style: italic;">Personal infomation</span></h6>
+    
+        </div>
+        
+    
+            <form>
+                    <div style="border: 5px solid grey ;" class="container w-50">
+                    <table class="table caption-top">
+                        
+                        <tbody>
+                          <tr>
+                            <td class="h4  " style="font-weight: bold; color:gray;; ">First Name :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="fname"></td>
+                           
+                          </tr>
+                          <tr>
+                            <td class="h4 "  style="font-weight: bold; color:gray;">Last Name :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="lname"></td>
+                          </tr>
+                          <tr>
+                            <td class="h4 " style="font-weight: bold; color:gray;">Address :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="adress"></td>
+                          </tr>
+                          <tr>
+                            <td class="h4 " style="font-weight: bold; color:gray;">Age :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="age"></td>
+                          </tr>
+                          <tr>
+                            <td class="h4 " style="font-weight: bold; color:gray;">E-Mail :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="email"></td>
+                          </tr>
+
+                          <tr>
+                            <td class="h4 "  style="font-weight: bold; color:gray;">User name :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="userName"></td>
+                          </tr>
+
+                          <tr>
+                            <td class="h4 " style="font-weight: bold; color:gray">Password :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="password"></td>
+                          </tr>
+
+                          <tr>
+                            <td class="h4 "  style="font-weight: bold; color:gray">User Type :</td>
+                            <td class="h4 "  style="font-weight: bold; color:gray;" id="userType"></td>
+                          </tr>
+
+                        </tbody>
+                      </table>
+
+                    </div>
+
+
+            </form>
+    </div>
+
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.6.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+
+</html>

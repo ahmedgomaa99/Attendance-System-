@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <style>
+    body {
+                   background-color:aliceblue;
+        }
+  </style>
+  <script>
+    window.addEventListener('load', function () {
+      let currentUserData = "";
+      if (sessionStorage.getItem("currentUserData")) {
+        currentUserData = JSON.parse(sessionStorage.getItem("currentUserData"));
+      }
+      if (currentUserData !== "") {
+        const attendanceLink = document.getElementById('attendance-link');
+        if (currentUserData.userType === "Empolyee" || currentUserData.userType === "admin") {
+          attendanceLink.parentNode.removeChild(attendanceLink);
+
+        }
+        const waitingLink = document.getElementById('waiting-link');
+        if (currentUserData.userType === "Empolyee" || currentUserData.userType === "securityman") {
+          waitingLink.parentNode.removeChild(waitingLink);
+
+        }
+
+      }
+
+
+
+      function updatetable(dailyAttendData) {
+        let daatatable = document.getElementsByTagName('table')[0];
+        let tabletrs = document.getElementsByTagName('tbody')[0];
+        tabletrs.innerHTML = "";
+
+        for (let index1 = 0; index1 < dailyAttendData.length; index1++) {
+
+          let daydataarr = dailyAttendData[index1].dayattendenceData;
+          for (let index = 0; index < daydataarr.length; index++) {
+            console.log(daydataarr);
+            let createdtr = document.createElement('tr');
+            let enteranceDate = document.createElement('td');
+            enteranceDate.innerText = dailyAttendData[index1].day;
+            let employeeName = document.createElement('td');
+            employeeName.innerText = daydataarr[index].username;
+            let enterenceTime = document.createElement('td');
+            enterenceTime.innerText = daydataarr[index].EnterenceTime;
+            let depatureTime = document.createElement('td');
+            depatureTime.innerText = daydataarr[index].Depaturetime;
+            createdtr.appendChild(enteranceDate);
+            createdtr.appendChild(employeeName);
+            createdtr.appendChild(enterenceTime);
+            createdtr.appendChild(depatureTime);
+            tabletrs.appendChild(createdtr);
+            daatatable.appendChild(tabletrs);
+          }
+
+        }
+
+      }
+      
+      let monthlyAttendenceData = [];
+      if (localStorage.getItem("monthlyAttendenceData")) {
+        monthlyAttendenceData = JSON.parse(localStorage.getItem("monthlyAttendenceData"));
+      }
+      updatetable(monthlyAttendenceData);
+
+    });
+
+
+  </script>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-gradient">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" 
+      data-target="#navbarNavAltMarkup"  aria-controls="navbarNavAltMarkup" 
+      aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+
+          <div class="dropdown">
+            <button class="btn " type="button" id="dropdownMenuButton"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Home
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="Monthlyhome.html">Monthly Report</a>
+              <a class="dropdown-item" href="Dailyhome.html">Daily Report</a>
+              <a class="dropdown-item" href="waitingEmp.html" id="waiting-link">waiting Report</a>
+
+            </div>
+          </div> 
+
+          <a class="nav-link" href="attendance.html" id="attendance-link">Attendance</a>
+
+          <a class="nav-link" href="profile.html">Profile</a>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="text-center" >
+
+    <h1><span  style="color:black ;text-decoration: underline;font-style: italic;">Monthly Report Page</span></h6>
+
+    </div>
+    
+
+
+
+
+
+    <table class="table m-2" id="navbarNavAltMarkup">
+      <thead class=" bg-dark text-light text-center">
+        <tr>
+          <th scope="col">Attendance Date</th>
+          <th scope="col">employeeName</th>
+          <th scope="col">Attendance Time</th>
+          <th scope="col">Depature Time</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white text-center">
+        
+      </tbody>
+   </table> 
+
+
+
+
+
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.6.4.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+
+</html>
